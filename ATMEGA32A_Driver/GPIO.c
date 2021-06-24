@@ -1,0 +1,92 @@
+/*
+ * GPIO.c
+ *
+ * Created: 6/24/2021 12:42:06 AM
+ *  Author: Mostafa Mahmoud
+ */ 
+#include "GPIO.h"
+
+extern volatile GPIO* GPIOS_REG[PORT_MAX];
+
+PIN_DIR GPIO_PIN_READ_DIR(GPIO_PORTS PORT_NUM,PINS PIN_NUM){
+	if(IS_BIT_SET(GPIOS_REG[PORT_NUM] -> DDR -> Data ,PIN_NUM)){
+		return INPUT;
+	}
+	return OUTPUT;
+}
+
+PIN_MODE GPIO_DIGITAL_READ(GPIO_PORTS GPIO_NUM,PINS PIN_NUM){
+	if(IS_BIT_SET(GPIOS_REG[PORT_MAX] -> PIN -> Data ,PIN_NUM)){
+		return HIGH;
+	}
+	return LOW;
+}
+
+
+GPIO_RET GPIO_PIN_DIR(GPIO_PORTS PORT_NUM,PINS PIN_NUM,PIN_DIR DIR){
+	switch(DIR){
+		case INPUT:
+				SET_BIT(GPIOS_REG[PORT_NUM] -> DDR -> Data ,PIN_NUM);
+				break;
+		case OUTPUT:
+				CLEAR_BIT(GPIOS_REG[PORT_NUM] -> DDR -> Data ,PIN_NUM);
+				break;
+		default: break; 
+		}
+	return RET_OK;
+}
+
+GPIO_RET GPIO_PIN_MODE(GPIO_PORTS PORT_NUM,PINS PIN_NUM,PIN_MODE MODE){
+	if(GPIO_PIN_READ_DIR(PORT_NUM, PIN_NUM) == INPUT){
+		return RET_NOT_OK;
+	}
+	switch(MODE){
+		case LOW:
+				CLEAR_BIT(GPIOS_REG[PORT_NUM] -> PORT -> Data,PIN_NUM);
+				break;
+		case HIGH:
+				SET_BIT(GPIOS_REG[PORT_NUM] -> PORT -> Data,PIN_NUM);
+				break;
+		default:break;
+	}
+	return RET_OK;
+}
+
+GPIO_RET GPIO_PULLUP_CONFIG(GPIO_PORTS PORT_NUM, PINS PIN_NUM, PIN_CON MODE){
+	if(GPIO_PIN_READ_DIR(PORT_NUM, PIN_NUM) == OUTPUT){
+		return RET_NOT_OK;
+	}
+	switch(MODE){
+		case DISABLE:
+				CLEAR_BIT(GPIOS_REG[PORT_NUM] -> PORT -> Data,PIN_NUM);
+				break;
+		case ENABLE:
+				SET_BIT(GPIOS_REG[PORT_NUM] -> PORT -> Data,PIN_NUM);
+				break;
+		default:break;
+	}
+	return RET_OK;
+}
+
+GPIO_RET GPIO_PIN_CONFIG(GPIO_PORTS PORT_NUM,PINS PIN_NUM,GPIO_MODE MODE){
+	switch(MODE){
+		case INPUT_FLOAT_POINT:
+				GPIO_PIN_DIR(PORT_NUM, PIN_NUM, INPUT);
+				GPIO_PULLUP_CONFIG(PORT_NUM, PIN_NUM, DISABLE);
+				break;
+		case INPUT_PULLUP:
+				GPIO_PIN_DIR(PORT_NUM, PIN_NUM, INPUT);
+				GPIO_PULLUP_CONFIG(PORT_NUM, PIN_NUM, ENABLE);
+				break;
+		case OUTPUT_LOW:
+				GPIO_PIN_DIR(PORT_NUM, PIN_NUM, OUTPUT);
+				GPIO_PIN_MODE(PORT_NUM,PIN_NUM, LOW);
+				break;
+		case OUTPUT_HIGH:
+				GPIO_PIN_DIR(PORT_NUM, PIN_NUM, OUTPUT);
+				GPIO_PIN_MODE(PORT_NUM,PIN_NUM, HIGH);
+				break;		
+		default : break;
+	}
+	return RET_OK;
+}
