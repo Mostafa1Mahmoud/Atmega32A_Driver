@@ -18,7 +18,7 @@
  
 typedef union{
 	vuint8 Data;
-	struct {
+	 struct{
 		vuint8 Bit0:1;
 		vuint8 Bit1:1;
 		vuint8 Bit2:1;
@@ -27,7 +27,7 @@ typedef union{
 		vuint8 Bit5:1;
 		vuint8 Bit6:1;
 		vuint8 Bit7:1;
-	}BIT;
+		}BITS;
 }REG;
 
 #endif /* MICRO_CONFIGURE_FILE_H_ */

@@ -11,20 +11,18 @@
 
 #include "Micro_Configure_File.h"
 
+#define GPIOA ((volatile GPIO*)(0x39))
+#define GPIOB ((volatile GPIO*)(0x36))
+#define GPIOC ((volatile GPIO*)(0x33))
+#define GPIOD ((volatile GPIO*)(0x30))
 
 typedef struct{
-	REG* PORT;
-	REG* DDR;
-	REG* PIN;
+	REG PIN;
+	REG DDR;
+	REG PORT;
 }GPIO;
 
-volatile GPIO* GPIOS_REG[PORT_MAX] = {
-	{(REG*)0x3B, (REG*)0x3A, (REG*)0x39},
-	{(REG*)0x38, (REG*)0x37, (REG*)0x36},
-	{(REG*)0x35, (REG*)0x34, (REG*)0x33},
-	{(REG*)0x32, (REG*)0x31, (REG*)0x30},
-};
-
+extern volatile GPIO* GPIOS_REG[PORT_MAX];
 
 typedef enum {
 		INPUT,
@@ -43,7 +41,7 @@ typedef enum {
 
 typedef enum {
 	RET_NOT_OK,
-	RET_OK	
+	RET_OK
 }GPIO_RET;
 
 typedef enum {

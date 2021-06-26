@@ -4,12 +4,41 @@
  * Created: 6/24/2021 12:02:38 AM
  *  Author: Mostafa Mahmoud
  */ 
-
+#include "GPIO.h"
+#include <util/delay.h>
 
 int main(void)
-{
+{	
+	GPIO_PIN_DIR(PORTA,PIN0,OUTPUT);
+	GPIO_PIN_DIR(PORTA,PIN1,OUTPUT);
+	GPIO_PIN_DIR(PORTA,PIN2,OUTPUT);
+	GPIO_PIN_DIR(PORTD,PIN0,INPUT);
+	GPIO_PIN_DIR(PORTD,PIN1,INPUT);
+	GPIO_PIN_DIR(PORTD,PIN2,INPUT);
     while(1)
     {
-        //TODO:: Please write your application code 
+		if(GPIO_DIGITAL_READ(PORTD,PIN0) == HIGH){
+			GPIO_PIN_MODE(PORTA,PIN0,HIGH);
+			GPIO_PIN_MODE(PORTA,PIN1,LOW);
+			GPIO_PIN_MODE(PORTA,PIN2,LOW);	
+			_delay_ms(400);
+		}
+		else if(GPIO_DIGITAL_READ(PORTD,PIN1) == HIGH){
+			GPIO_PIN_MODE(PORTA,PIN0,LOW);
+			GPIO_PIN_MODE(PORTA,PIN1,HIGH);
+			GPIO_PIN_MODE(PORTA,PIN2,LOW);	
+			_delay_ms(400);
+		}
+		else if(GPIO_DIGITAL_READ(PORTD,PIN2) == HIGH){
+			GPIO_PIN_MODE(PORTA,PIN0,LOW);
+			GPIO_PIN_MODE(PORTA,PIN1,LOW);
+			GPIO_PIN_MODE(PORTA,PIN2,HIGH);	
+			_delay_ms(400);
+		}
+		else{
+		GPIO_PIN_MODE(PORTA,PIN0,LOW);
+		GPIO_PIN_MODE(PORTA,PIN1,LOW);
+		GPIO_PIN_MODE(PORTA,PIN2,LOW);
+		}
     }
 }
